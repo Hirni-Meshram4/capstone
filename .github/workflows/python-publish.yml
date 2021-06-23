@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       #py: /opt/python/${{ matrix.pyver }}/bin/python
-      img: dockcross/manylinux2014-aarch64
+      img: quay.io/pypa/manylinux2014_aarch64
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -74,13 +74,13 @@ jobs:
     - name: Install dependencies
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} > ./dockcross \
+            ${{ env.img }} \
             bash -exc 'yum install sudo -y && \
             sudo yum install epel-release -y && \
             sudo yum install python-pip -y && \
             pip install setuptools wheel && \
-            chmod +x ./dockcross && \
-            ./dockcross bindings/python/build_wheel.sh && \
+            #chmod +x ./dockcross && \
+            ./bindings/python/build_wheel.sh && \
             deactivate'
 
   publish:
