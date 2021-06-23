@@ -75,7 +75,8 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} > ./dockcross \
-            bash -exc 'pip install setuptools wheel && \
+            bash -exc 'yum install python-pip && \
+            pip install setuptools wheel && \
             chmod +x ./dockcross && \
             ./dockcross bindings/python/build_wheel.sh && \
             deactivate'
