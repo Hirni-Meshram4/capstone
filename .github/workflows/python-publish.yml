@@ -78,7 +78,6 @@ jobs:
             bash -exc 'yum install sudo -y && \
             sudo yum install epel-release -y && \
             sudo yum install python3 -y && \
-            sudo yum install python-is-python3 -y && \
             sudo yum install python-pip -y && \
             pip install setuptools wheel && \
             #chmod +x ./dockcross && \
