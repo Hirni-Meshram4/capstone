@@ -81,8 +81,7 @@ jobs:
             sudo yum install python-pip -y && \
             pip install setuptools wheel && \
             #chmod +x ./dockcross && \
-            ./bindings/python/build_wheel.sh && \
-            deactivate'
+            ./bindings/python/build_wheel.sh'
 
   publish:
     needs: [build]
