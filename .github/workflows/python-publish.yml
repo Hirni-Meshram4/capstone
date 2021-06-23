@@ -75,7 +75,9 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} > ./dockcross \
-            bash -exc 'yum install python-pip && \
+            bash -exc 'yum install sudo -y && \
+            sudo yum install epel-release -y && \
+            sudo yum install python-pip -y && \
             pip install setuptools wheel && \
             chmod +x ./dockcross && \
             ./dockcross bindings/python/build_wheel.sh && \
