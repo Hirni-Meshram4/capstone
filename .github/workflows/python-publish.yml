@@ -74,13 +74,13 @@ jobs:
     - name: Install dependencies
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} > ./dockcross \
+            ${{ env.img }} \
             bash -exc '${{ env.py }} -m pip install virtualenv && ${{ env.py }} -m venv .env && \
             source .env/bin/activate && \
             python -m pip install --upgrade pip && \
             pip install setuptools wheel && \
             #chmod +x ./dockcross && \
-            ./dockcross bindings/python/build_wheel.sh && \
+            ./bindings/python/build_wheel.sh && \
             deactivate'
 
   publish:
