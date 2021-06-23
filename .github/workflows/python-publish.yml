@@ -56,14 +56,11 @@ jobs:
          path: ${{ github.workspace }}/bindings/python/dist/*
 
   build-aarch64:
-    name: "Build Wheel aarch64"
+    name: "build (ubuntu-latest, aarch64)"
     strategy:
-      #matrix:
-        #pyver: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
       fail-fast: false
     runs-on: ubuntu-latest
     env:
-      #py: /opt/python/${{ matrix.pyver }}/bin/python
       img: quay.io/pypa/manylinux2014_aarch64
     steps:
     - name: Checkout
@@ -71,7 +68,7 @@ jobs:
     - name: Set up QEMU
       id: qemu
       uses: docker/setup-qemu-action@v1
-    - name: Install dependencies
+    - name: Build Wheel
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} \
@@ -81,6 +78,9 @@ jobs:
             sudo yum install python-pip -y && \
             pip install setuptools wheel && \
             ./bindings/python/build_wheel.sh'
+    - uses: actions/upload-artifact@v2
+      with:
+         path: ${{ github.workspace }}/bindings/python/dist/*            
 
   publish:
     needs: [build]
