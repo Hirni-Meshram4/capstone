@@ -74,7 +74,7 @@ jobs:
     - name: Install dependencies
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} > ./dockcross \            
+            ${{ env.img }} > ./dockcross \
             bash -exc '${{ env.py }} -m pip install virtualenv && ${{ env.py }} -m venv .env && \
             source .env/bin/activate && \
             python -m pip install --upgrade pip && \
