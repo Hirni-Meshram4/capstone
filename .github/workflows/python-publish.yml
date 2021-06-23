@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       py: /opt/python/${{ matrix.pyver }}/bin/python
-      img: quay.io/pypa/manylinux2014_aarch64
+      img: dockcross/manylinux2014-aarch64
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -74,13 +74,10 @@ jobs:
     - name: Install dependencies
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} \
-            bash -exc '${{ env.py }} -m pip install virtualenv && ${{ env.py }} -m venv .env && \
-            source .env/bin/activate && \
-            python -m pip install --upgrade pip && \
-            pip install setuptools wheel && \
-            #chmod +x ./dockcross && \
-            ./bindings/python/build_wheel.sh && \
+            ${{ env.img }} > ./dockcross \
+            bash -exc 'pip install setuptools wheel && \
+            chmod +x ./dockcross && \
+            ./dockcross bindings/python/build_wheel.sh && \
             deactivate'
 
   publish:
