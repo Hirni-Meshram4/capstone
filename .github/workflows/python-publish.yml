@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        platform: [x32, x64]
+        platform: [x32, x64, aarch64]
     steps:
     - uses: actions/checkout@v2
 
@@ -17,7 +17,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-
+        
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+      
     - name: Set up MSVC x86
       if: matrix.os == 'windows-latest' && matrix.platform == 'x32'
       uses: ilammy/msvc-dev-cmd@v1
@@ -45,6 +49,10 @@ jobs:
              docker run --rm -v `pwd`/:/work dockcross/manylinux1-x64 > ./dockcross
              chmod +x ./dockcross
              ./dockcross bindings/python/build_wheel.sh
+        elif [ ${{ matrix.platform }} == 'aarch64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
+             docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross
+             chmod +x ./dockcross
+             ./dockcross bindings/python/build_wheel.sh
         elif [ ${{ matrix.platform }} == 'x32' ] && [ ${{ matrix.os }} == 'macos-latest' ]; then
              cd bindings/python && python setup.py sdist
         else
@@ -55,32 +63,6 @@ jobs:
       with:
          path: ${{ github.workspace }}/bindings/python/dist/*
 
-  build-aarch64:
-    name: "build (ubuntu-latest, aarch64)"
-    strategy:
-      fail-fast: false
-    runs-on: ubuntu-latest
-    env:
-      img: quay.io/pypa/manylinux2014_aarch64
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Set up QEMU
-      id: qemu
-      uses: docker/setup-qemu-action@v1
-    - name: Build Wheel
-      run: |
-            docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} \
-            bash -exc 'yum install sudo -y && \
-            sudo yum install epel-release -y && \
-            #sudo yum install python3 -y && \
-            sudo yum install python-pip -y && \
-            pip install setuptools wheel && \
-            ./bindings/python/build_wheel.sh'
-    - uses: actions/upload-artifact@v2
-      with:
-         path: ${{ github.workspace }}/bindings/python/dist/*            
 
   publish:
     needs: [build]
