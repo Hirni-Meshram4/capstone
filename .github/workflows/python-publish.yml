@@ -54,8 +54,7 @@ jobs:
              bash -exc 'uname -m && \
              yum install python-pip -y && \
              pip install setuptools wheel && \
-             chmod +x ./dockcross && \
-             sync && \
+             chmod +x ./dockcross; sync && \
              ./dockcross bindings/python/build_wheel.sh'
         elif [ ${{ matrix.platform }} == 'x32' ] && [ ${{ matrix.os }} == 'macos-latest' ]; then
              cd bindings/python && python setup.py sdist
