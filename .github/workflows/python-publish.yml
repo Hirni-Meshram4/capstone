@@ -20,7 +20,7 @@ jobs:
         python-version: '3.x'
         
     - name: Set up QEMU
-      if: ${{ matrix.platform == 'aarch64' }}
+      if: ${{ matrix.arch == 'aarch64' }}
       uses: docker/setup-qemu-action@v1
       
     - name: Set up MSVC x86
