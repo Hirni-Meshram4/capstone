@@ -51,14 +51,13 @@ jobs:
              chmod +x ./dockcross
              ./dockcross bindings/python/build_wheel.sh
         elif [ ${{ matrix.arch }} == 'aarch64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
-             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-             pypa//manylinux2014_aarch64 > ./dockcross \
+             docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross-manylinux2014-aarch64 \
              bash -exc 'uname -m && \
-             file dockcross && \
+             #file dockcross && \
              yum install python-pip -y && \
              pip install setuptools wheel && \
-             chmod +x ./dockcross; sync && \
-             ./dockcross bindings/python/build_wheel.sh'
+             chmod +x ./dockcross-manylinux2014-aarch64 && \
+             ./dockcross-manylinux2014-aarch64 bindings/python/build_wheel.sh'
         elif [ ${{ matrix.platform }} == 'x32' ] && [ ${{ matrix.os }} == 'macos-latest' ]; then
              cd bindings/python && python setup.py sdist
         else
