@@ -53,6 +53,7 @@ jobs:
         elif [ ${{ matrix.arch }} == 'aarch64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
              docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws dockcross/manylinux2014-aarch64 > ./dockcross \
              bash -exc 'uname -m && \
+             file dockcross && \
              yum install python-pip -y && \
              pip install setuptools wheel && \
              chmod +x ./dockcross; sync && \
