@@ -3,7 +3,7 @@ name: PyPI 📦 Distribution
 on: [push]
 
 jobs:
-  build ${{ matrix.os }} ${{ matrix.arch }}:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
