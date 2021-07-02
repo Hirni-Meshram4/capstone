@@ -3,7 +3,7 @@ set -e -x
 
 cd bindings/python
 #if [ `uname -m` == "x86_64" ]; then
- #  sudo rm /usr/bin/python && sudo ln -s /opt/python/cp27-cp27m/bin/python /usr/bin/python; python -V 
+sudo rm /usr/bin/python && sudo ln -s /opt/python/cp27-cp27m/bin/python /usr/bin/python; python -V 
 #fi
 
 # Compile wheels
