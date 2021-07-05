@@ -26,7 +26,7 @@ jobs:
       #shell: bash 
       run: |
              docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross-manylinux2014-aarch64 \
-             bash -exc 'uname -m && \
+             bash -c 'uname -m && \
              chmod 777 ./dockcross-manylinux2014-aarch64 && \
              ls ./dockcross-manylinux2014-aarch64 && \
              file dockcross-manylinux2014-aarch64 && \
