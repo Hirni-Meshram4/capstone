@@ -58,6 +58,7 @@ jobs:
         elif [ ${{ matrix.platform }} == 'aarch64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then 
              docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross
              chmod +x ./dockcross
+             ./dockcross cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MAVSDK_SERVER=ON -DBUILD_SHARED_LIBS=OFF -Bbuild/linux-aarch64 -S.
              ./dockcross cmake --build build/linux-aarch64 -j 8
              uname -m
              ls
