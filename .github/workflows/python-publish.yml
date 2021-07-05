@@ -8,8 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        arch: [aarch64]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [x32, x64, aarch64]
     steps:
     - uses: actions/checkout@v2
 
@@ -17,22 +17,42 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-        
-    - name: Set up QEMU
-      #if: ${{ matrix.arch == 'aarch64' }}
-      uses: docker/setup-qemu-action@v1
-      
+
+    - name: Set up MSVC x86
+      if: matrix.os == 'windows-latest' && matrix.platform == 'x32'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x86
+
+    - name: Set up MSVC x64
+      if: matrix.os == 'windows-latest' && matrix.platform == 'x64'
+      uses: ilammy/msvc-dev-cmd@v1
+
     - name: Install dependencies
       run: |
-        pip install setuptools wheel      
-
+        pip install setuptools wheel
     - name: Build distribution 📦
-      #shell: bash 
+      shell: bash 
       run: |
+        if [ ${{ matrix.platform }} == 'x32' ] && [ ${{ matrix.os }} == 'windows-latest' ]; then
+             cd bindings/python && python setup.py build -p win32 bdist_wheel -p win32
+        elif [ ${{ matrix.platform }} == 'x32' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
+             docker run --rm -v `pwd`/:/work dockcross/manylinux1-x86 > ./dockcross
+             chmod +x ./dockcross
+             ./dockcross bindings/python/build_wheel.sh
+        elif [ ${{ matrix.platform }} == 'x64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
+             docker run --rm -v `pwd`/:/work dockcross/manylinux1-x64 > ./dockcross
+             chmod +x ./dockcross
+             ./dockcross bindings/python/build_wheel.sh
+        elif [ ${{ matrix.platform }} == 'x32' ] && [ ${{ matrix.os }} == 'macos-latest' ]; then
+             cd bindings/python && python setup.py sdist
+        elif [ ${{ matrix.platform }} == 'aarch64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then 
              docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross-manylinux2014-aarch64
              chmod +x ./dockcross-manylinux2014-aarch64
              ./dockcross-manylinux2014-aarch64 bindings/python/build_wheel.sh
-       
+        else
+             cd bindings/python && python setup.py bdist_wheel
+        fi
     - uses: actions/upload-artifact@v2
       with:
          path: ${{ github.workspace }}/bindings/python/dist/*
