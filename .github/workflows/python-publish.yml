@@ -27,7 +27,7 @@ jobs:
       run: |
              docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross-manylinux2014-aarch64 \
              bash -exc 'uname -m && \
-             chmod +x ./dockcross-manylinux2014-aarch64 && \
+             chmod 777 ./dockcross-manylinux2014-aarch64 && \
              ls ./dockcross-manylinux2014-aarch64 && \
              file dockcross-manylinux2014-aarch64 && \
              yum install python-pip -y && \
