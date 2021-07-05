@@ -57,8 +57,7 @@ jobs:
              cd bindings/python && python setup.py sdist
         elif [ ${{ matrix.platform }} == 'aarch64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then 
              docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross
-             chmod +x ./dockcross
-             ./dockcross cmake --build build/linux-aarch64 -j 8
+             bash -exc 'chmod +x ./dockcross && \
              uname -m && \
              ls && \
              ./dockcross bindings/python/build_wheel.sh'
@@ -92,3 +91,4 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.pypi_pass }}
+
