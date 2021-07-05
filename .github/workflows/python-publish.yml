@@ -21,18 +21,17 @@ jobs:
     - name: Set up QEMU
       #if: ${{ matrix.arch == 'aarch64' }}
       uses: docker/setup-qemu-action@v1
+      
+    - name: Install dependencies
+      run: |
+        pip install setuptools wheel      
 
     - name: Build distribution 📦
       #shell: bash 
       run: |
-             docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross-manylinux2014-aarch64 \
-             bash -c 'uname -m && \
-             chmod 777 ./dockcross-manylinux2014-aarch64 && \
-             ls ./dockcross-manylinux2014-aarch64 && \
-             file dockcross-manylinux2014-aarch64 && \
-             yum install python-pip -y && \
-             pip install setuptools wheel && \
-             ./dockcross-manylinux2014-aarch64 bindings/python/build_wheel.sh'
+             docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross-manylinux2014-aarch64
+             chmod +x ./dockcross-manylinux2014-aarch64
+             ./dockcross-manylinux2014-aarch64 bindings/python/build_wheel.sh
        
     - uses: actions/upload-artifact@v2
       with:
