@@ -58,6 +58,8 @@ jobs:
         elif [ ${{ matrix.platform }} == 'aarch64' ] && [ ${{ matrix.os }} == 'ubuntu-latest' ]; then 
              docker run --rm -v `pwd`/:/work dockcross/manylinux2014-aarch64 > ./dockcross
              bash -exc 'chmod +x ./dockcross && \
+             uname -m && \
+             ls && \
              ./dockcross bindings/python/build_wheel.sh'
         else
              cd bindings/python && python setup.py bdist_wheel
