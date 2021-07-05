@@ -10,6 +10,11 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         platform: [x32, x64, aarch64]
+        exclude:
+          - os: macos-latest
+            platform: aarch64
+          - os: windows-latest
+            platform: aarch64
     steps:
     - uses: actions/checkout@v2
 
@@ -17,6 +22,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+        
+    - name: Set up QEMU
+      if: ${{ matrix.platform == 'aarch64' }}
+      uses: docker/setup-qemu-action@v1        
 
     - name: Set up MSVC x86
       if: matrix.os == 'windows-latest' && matrix.platform == 'x32'
